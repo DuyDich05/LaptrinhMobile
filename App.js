@@ -1,30 +1,10 @@
-/*import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Xin chào Nguyễn Địch Khánh Duy - 23810310173</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});*/
-
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
+  Alert
 } from 'react-native';
 import { useState } from 'react';
 
@@ -54,9 +34,20 @@ export default function App() {
     }
   };
 
+  const handleContinue = () => {
+    Alert.alert(
+      'Thông báo',
+      `Số điện thoại bạn nhập là:\n${phone}`,
+      [
+        { text: 'Hủy', style: 'cancel' },
+        { text: 'OK', onPress: () => console.log('Tiếp tục đăng nhập') }
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
-      
+
       {/* PHẦN TRÊN */}
       <View>
         <Text style={styles.title}>Đăng nhập</Text>
@@ -67,12 +58,11 @@ export default function App() {
       </View>
 
       {/* PHẦN DƯỚI */}
-      
       <View>
+
         <View style={styles.phoneBox}>
           <Text style={styles.phoneText}>
             {phone || 'Nhập số điện thoại của bạn'}
-            
           </Text>
         </View>
 
@@ -82,11 +72,12 @@ export default function App() {
             { backgroundColor: phone.length === 10 ? '#4CAF50' : '#ccc' }
           ]}
           disabled={phone.length !== 10}
+          onPress={handleContinue}
         >
           <Text style={styles.buttonText}>Tiếp tục</Text>
         </TouchableOpacity>
 
-        {/* BÀN PHÍM SỐ + CHỮ */}
+        {/* BÀN PHÍM */}
         <View style={styles.keypad}>
           {keys.map((item, index) => (
             <TouchableOpacity
@@ -108,6 +99,7 @@ export default function App() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -169,4 +161,3 @@ const styles = StyleSheet.create({
     color: '#666'
   }
 });
-
