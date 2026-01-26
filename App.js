@@ -4,98 +4,110 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Alert
+  Modal,
 } from 'react-native';
 import { useState } from 'react';
 
-const keys = [
-  { num: '1', letters: '' },
-  { num: '2', letters: 'ABC' },
-  { num: '3', letters: 'DEF' },
-  { num: '4', letters: 'GHI' },
-  { num: '5', letters: 'JKL' },
-  { num: '6', letters: 'MNO' },
-  { num: '7', letters: 'PQRS' },
-  { num: '8', letters: 'TUV' },
-  { num: '9', letters: 'WXYZ' },
-  { num: '', letters: '' },
-  { num: '0', letters: '' },
-  { num: '⌫', letters: '' }
-];
-
 export default function App() {
   const [phone, setPhone] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
+  // chỉ nhập số, tối đa 10 số
   const pressKey = (key) => {
-    if (key === '⌫') {
-      setPhone(phone.slice(0, -1));
-    } else if (key && phone.length < 10) {
-      setPhone(phone + key);
-    }
+    if (!/^\d$/.test(key)) return;
+    if (phone.length >= 10) return;
+    setPhone(phone + key);
   };
 
-  const handleContinue = () => {
-    Alert.alert(
-      'Thông báo',
-      `Số điện thoại bạn nhập là:\n${phone}`,
-      [
-        { text: 'Hủy', style: 'cancel' },
-        { text: 'OK', onPress: () => console.log('Tiếp tục đăng nhập') }
-      ]
-    );
+  const deleteKey = () => {
+    setPhone(phone.slice(0, -1));
+  };
+
+  const handleLogin = () => {
+    if (phone.length === 10) {
+      setShowAlert(true);
+    }
   };
 
   return (
     <View style={styles.container}>
+      <StatusBar hidden />
 
-      {/* PHẦN TRÊN */}
-      <View>
-        <Text style={styles.title}>Đăng nhập</Text>
+      {/* Title */}
+      <Text style={styles.title}>Đăng nhập</Text>
+
+      {/* Content */}
+      <View style={styles.content}>
         <Text style={styles.label}>Nhập số điện thoại</Text>
         <Text style={styles.desc}>
-          Dùng số điện thoại để đăng nhập hoặc đăng ký
+          Dùng số điện thoại để đăng nhập hoặc đăng ký tài khoản
         </Text>
-      </View>
 
-      {/* PHẦN DƯỚI */}
-      <View>
-
-        <View style={styles.phoneBox}>
-          <Text style={styles.phoneText}>
-            {phone || 'Nhập số điện thoại của bạn'}
-          </Text>
-        </View>
+        <Text style={styles.input}>
+          {phone || 'Nhập số điện thoại của bạn'}
+        </Text>
 
         <TouchableOpacity
           style={[
             styles.button,
-            { backgroundColor: phone.length === 10 ? '#4CAF50' : '#ccc' }
+            { backgroundColor: phone.length === 10 ? '#2ec43d' : '#E5E5E5' },
           ]}
           disabled={phone.length !== 10}
-          onPress={handleContinue}
+          onPress={handleLogin}
         >
           <Text style={styles.buttonText}>Tiếp tục</Text>
         </TouchableOpacity>
-
-        {/* BÀN PHÍM */}
-        <View style={styles.keypad}>
-          {keys.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.key}
-              onPress={() => pressKey(item.num)}
-              disabled={!item.num}
-            >
-              <Text style={styles.keyNumber}>{item.num}</Text>
-              {item.letters !== '' && (
-                <Text style={styles.keyLetters}>{item.letters}</Text>
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
       </View>
 
-      <StatusBar style="auto" />
+      {/* Keyboard */}
+      <View style={styles.keyboard}>
+        {[
+          ['1'], ['2'], ['3'],
+          ['4'], ['5'], ['6'],
+          ['7'], ['8'], ['9'],
+          [''], ['0'], ['⌫'],
+        ].map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.key}
+            disabled={!item[0]}
+            onPress={() =>
+              item[0] === '⌫' ? deleteKey() : pressKey(item[0])
+            }
+          >
+            <Text style={styles.keyNumber}>{item[0]}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* iOS Dark Alert */}
+      <Modal transparent visible={showAlert} animationType="fade">
+        <View style={styles.overlay}>
+          <View style={styles.alertBox}>
+            <Text style={styles.alertTitle}>Thông báo</Text>
+            <Text style={styles.alertMessage}>
+              Số điện thoại bạn nhập là:
+            </Text>
+            <Text style={styles.alertPhone}>{phone}</Text>
+
+            <View style={styles.alertButtons}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => setShowAlert(false)}
+              >
+                <Text style={styles.buttonAlertText}>Hủy</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.okButton}
+                onPress={() => setShowAlert(false)}
+              >
+                <Text style={styles.buttonAlertText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -104,60 +116,130 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 24,
-    justifyContent: 'space-between',
-    paddingTop: 100
+    paddingTop: 50,
   },
+
   title: {
     fontSize: 22,
-    fontWeight: 'bold'
-  },
-  label: {
-    fontSize: 16,
     fontWeight: '600',
-    marginTop: 16
+    paddingHorizontal: 20,
   },
+
+  content: {
+    paddingHorizontal: 20,
+    marginTop: 30,
+  },
+
+  label: {
+    fontSize: 18,
+    fontWeight: '500',
+  },
+
   desc: {
-    fontSize: 13,
-    color: '#777',
-    marginTop: 6
+    marginTop: 8,
+    color: '#666',
+    fontSize: 14,
   },
-  phoneBox: {
+
+  input: {
+    marginTop: 20,
+    fontSize: 16,
     borderBottomWidth: 1,
     borderColor: '#ccc',
-    paddingVertical: 12
+    paddingVertical: 8,
   },
-  phoneText: {
-    fontSize: 18
-  },
+
   button: {
-    padding: 14,
+    marginTop: 30,
+    height: 48,
     borderRadius: 8,
-    alignItems: 'center',
-    marginVertical: 16
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16
-  },
-  keypad: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between'
-  },
-  key: {
-    width: '30%',
-    height: 65,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 6
   },
+
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
+  },
+
+  keyboard: {
+    marginTop: 'auto',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingBottom: 20,
+  },
+
+  key: {
+    width: '33.33%',
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   keyNumber: {
-    fontSize: 22,
-    fontWeight: '600'
+    fontSize: 24,
   },
-  keyLetters: {
-    fontSize: 10,
-    color: '#666'
-  }
+
+  /* ALERT */
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  alertBox: {
+    width: 320,
+    backgroundColor: '#3A3A3C',
+    borderRadius: 28,
+    padding: 20,
+  },
+
+  alertTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: 8,
+  },
+
+  alertMessage: {
+    color: '#D1D1D6',
+    fontSize: 14,
+  },
+
+  alertPhone: {
+    color: '#fff',
+    fontSize: 16,
+    marginTop: 6,
+    marginBottom: 20,
+  },
+
+  alertButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  cancelButton: {
+    flex: 1,
+    backgroundColor: '#4A4A4C',
+    paddingVertical: 14,
+    borderRadius: 22,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+
+  okButton: {
+    flex: 1,
+    backgroundColor: '#4A4A4C',
+    paddingVertical: 14,
+    borderRadius: 22,
+    marginLeft: 10,
+    alignItems: 'center',
+  },
+
+  buttonAlertText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
+  },
 });
