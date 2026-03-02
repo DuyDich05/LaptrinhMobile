@@ -40,7 +40,7 @@ export default function App() {
       <View style={styles.content}>
         <Text style={styles.label}>Nhập số điện thoại</Text>
         <Text style={styles.desc}>
-          Dùng số điện thoại để đăng nhập hoặc đăng ký tài khoản
+          Dùng số điện thoại để đăng nhập hoặc đăng ký tài khoản OneHousing Pro
         </Text>
 
         <Text style={styles.input}>
