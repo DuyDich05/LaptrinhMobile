@@ -1,25 +1,42 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AccountScreen({ setIsLogin }) {
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("isLogin");
+    setIsLogin(false);
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}></View>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <Image
+          source={require("../assets/AnhDoMixi.png")} // 👉 thêm ảnh avatar vào assets
+          style={styles.avatar}
+        />
+      </View>
 
-      <Text style={styles.name}>Admin</Text>
-      <Text style={styles.job}>Mobile developer</Text>
+      {/* INFO */}
+      <View style={styles.info}>
+        <Text style={styles.name}>Admin</Text>
+        <Text style={styles.job}>Mobile Developer</Text>
 
-      <Text style={styles.desc}>
-        I have above 5 years of experience in native mobile apps development,
-        now i am learning React Native
-      </Text>
+        <Text style={styles.desc}>
+          Hello Do Mixi.
+        </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => setIsLogin(false)}
-      >
-        <Text style={{ color: "white" }}>Sign Out</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleLogout}>
+          <Text style={styles.buttonText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -27,19 +44,36 @@ export default function AccountScreen({ setIsLogin }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  // HEADER
+  header: {
+    height: 180,
+    backgroundColor: "#18a4c7",
+    justifyContent: "flex-end",
     alignItems: "center",
   },
 
-  header: {
-    width: "100%",
-    height: 150,
-    backgroundColor: "#18a4c7",
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: -50, // 👉 đè xuống phần info
+    borderWidth: 3,
+    borderColor: "#fff",
+  },
+
+  // INFO
+  info: {
+    alignItems: "center",
+    marginTop: 60,
+    paddingHorizontal: 20,
   },
 
   name: {
     fontSize: 22,
     fontWeight: "bold",
-    marginTop: 20,
   },
 
   job: {
@@ -49,13 +83,20 @@ const styles = StyleSheet.create({
 
   desc: {
     textAlign: "center",
-    paddingHorizontal: 40,
+    marginTop: 10,
   },
 
   button: {
     backgroundColor: "orange",
     padding: 12,
-    borderRadius: 6,
+    borderRadius: 8,
     marginTop: 20,
+    width: "60%",
+    alignItems: "center",
+  },
+
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });

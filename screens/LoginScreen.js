@@ -3,54 +3,54 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomTextInput from "../components/CustomTextInput";
+import IconButton from "../components/IconButton";
 
 export default function LoginScreen({ setIsLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const handleLogin = async () => {
+    // 👉 bấm là đăng nhập luôn
+    await AsyncStorage.setItem("isLogin", "true");
+    setIsLogin(true);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign In</Text>
 
-      <Text>Email ID</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your email here!"
+      <CustomTextInput
+        label="Email"
+        placeholder="Enter your email"
         value={email}
         onChangeText={setEmail}
       />
 
-      <Text>Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your password here!"
-        secureTextEntry
+      <CustomTextInput
+        label="Password"
+        placeholder="Enter your password"
         value={password}
         onChangeText={setPassword}
+        secureTextEntry={true}
       />
 
-      <Text style={styles.forgot}>Forgot password?</Text>
+      <TouchableOpacity>
+        <Text style={styles.forgot}>Forgot password?</Text>
+      </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => setIsLogin(true)}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
 
-      <Text style={{ marginTop: 20 }}>Or sign in with</Text>
+      <Text style={styles.orText}>Or sign in with</Text>
 
       <View style={styles.socialRow}>
-        <TouchableOpacity style={styles.socialBtn}>
-          <Text>Google</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.socialBtn, { backgroundColor: "#3b5998" }]}>
-          <Text style={{ color: "white" }}>Facebook</Text>
-        </TouchableOpacity>
+        <IconButton title="Google" icon="logo-google" color="#DB4437" />
+        <IconButton title="Facebook" icon="logo-facebook" color="#3b5998" />
       </View>
 
       <Text style={styles.signup}>
@@ -65,56 +65,38 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 25,
     justifyContent: "center",
+    backgroundColor: "#fff",
   },
-
   title: {
     fontSize: 28,
     fontWeight: "bold",
     alignSelf: "center",
     marginBottom: 30,
   },
-
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
-    borderRadius: 6,
-    marginVertical: 10,
-  },
-
   forgot: {
     alignSelf: "flex-end",
     color: "orange",
     marginBottom: 20,
   },
-
   button: {
     backgroundColor: "orange",
     padding: 15,
-    borderRadius: 6,
+    borderRadius: 8,
     alignItems: "center",
   },
-
   buttonText: {
     color: "white",
     fontWeight: "bold",
   },
-
+  orText: {
+    textAlign: "center",
+    marginTop: 20,
+  },
   socialRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
   },
-
-  socialBtn: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 15,
-    borderRadius: 6,
-    width: "45%",
-    alignItems: "center",
-  },
-
   signup: {
     marginTop: 20,
     alignSelf: "center",

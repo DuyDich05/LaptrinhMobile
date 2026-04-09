@@ -1,68 +1,94 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput, ScrollView, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  FlatList,
+  Image,
+} from "react-native";
+import SectionHeader from "../components/SectionHeader";
 
 export default function ExplorerScreen() {
+  // DATA
+  const categories = [
+    { id: "1", name: "Pizza", img: require("../assets/Pizza.png") },
+    { id: "2", name: "Burger", img: require("../assets/Burger.jpg") },
+    { id: "3", name: "Steak", img: require("../assets/Steak.jpg") },
+  ];
+
+  const popular = [
+    { id: "1", name: "Spaghetti", price: "$1", img: require("../assets/Spaghetti.jpg") },
+    { id: "2", name: "Burrito", price: "$3", img: require("../assets/Burrito.jpg") },
+  ];
+
+  const sale = [
+    { id: "1", name: "Pizza Sale", price: "$0.5", img: require("../assets/Pizza.png") },
+    { id: "2", name: "Burger Sale", price: "$1.5", img: require("../assets/Burger.jpg") },
+  ];
+
+  // RENDER CATEGORY
+  const renderCategory = ({ item }) => (
+    <View style={styles.card}>
+      <Image source={item.img} style={styles.image} />
+      <Text>{item.name}</Text>
+    </View>
+  );
+
+  // RENDER FOOD ITEM
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <Image source={item.img} style={styles.foodImage} />
+      <View>
+        <Text>{item.name}</Text>
+        <Text>{item.price}</Text>
+      </View>
+    </View>
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Explorer</Text>
+    <FlatList
+      style={styles.container}
+      ListHeaderComponent={
+        <>
+          <Text style={styles.title}>Explorer</Text>
 
-      <TextInput
-        placeholder="Search for meals or area"
-        style={styles.search}
-      />
-
-      <Text style={styles.section}>Top Categories</Text>
-
-      <View style={styles.row}>
-        <View style={styles.card}>
-          <Image
-            source={require("../assets/Pizza.png")}
-            style={styles.image}
+          {/* SEARCH */}
+          <TextInput
+            placeholder="Search for meals or area"
+            style={styles.search}
           />
-          <Text>Pizza</Text>
-        </View>
 
-        <View style={styles.card}>
-          <Image
-            source={require("../assets/Burger.jpg")}
-            style={styles.image}
+          {/* TOP CATEGORIES */}
+          <SectionHeader title="Top Categories" />
+          <FlatList
+            data={categories}
+            renderItem={renderCategory}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
           />
-          <Text>Burgers</Text>
-        </View>
 
-        <View style={styles.card}>
-          <Image
-            source={require("../assets/Steak.jpg")}
-            style={styles.image}
+          {/* POPULAR */}
+          <SectionHeader title="Popular Items" />
+          <FlatList
+            data={popular}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
           />
-          <Text>Steak</Text>
-        </View>
-      </View>
 
-      <Text style={styles.section}>Popular Items</Text>
-
-      <View style={styles.item}>
-        <Image
-          source={require("../assets/Spaghetti.jpg")}
-          style={styles.foodImage}
-        />
-        <View>
-          <Text>Food 1</Text>
-          <Text>1$</Text>
-        </View>
-      </View>
-
-      <View style={styles.item}>
-        <Image
-          source={require("../assets/Burrito.jpg")}
-          style={styles.foodImage}
-        />
-        <View>
-          <Text>Food 2</Text>
-          <Text>3$</Text>
-        </View>
-      </View>
-    </ScrollView>
+          {/* SALE */}
+          <SectionHeader title="Sale-off Items" />
+          <FlatList
+            data={sale}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        </>
+      }
+      data={[]} // bắt buộc có
+      renderItem={null}
+    />
   );
 }
 
@@ -85,23 +111,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
-  section: {
-    marginTop: 20,
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-
-  row: {
-    flexDirection: "row",
-    marginTop: 10,
-  },
-
   card: {
     backgroundColor: "#eee",
     padding: 10,
     borderRadius: 10,
     marginRight: 10,
     alignItems: "center",
+    marginTop: 10,
   },
 
   image: {
