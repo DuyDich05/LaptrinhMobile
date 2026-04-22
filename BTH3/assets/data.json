@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Caffe Mocha",
+    "desc": "Deep Foam",
+    "price": 4.53,
+    "image": "CaffeMocha"
+  },
+  {
+    "id": 2,
+    "name": "Flat White",
+    "desc": "Espresso",
+    "price": 3.53,
+    "image": "FlatWhite"
+  },
+  {
+    "id": 3,
+    "name": "Mocha Fusi",
+    "desc": "Ice/Hot",
+    "price": 7.53,
+    "image": "MochaFusi"
+  },
+  {
+    "id": 4,
+    "name": "Caffe Panna",
+    "desc": "Ice/Hot",
+    "price": 5.53,
+    "image": "CaffePanna"
+  }
+]
